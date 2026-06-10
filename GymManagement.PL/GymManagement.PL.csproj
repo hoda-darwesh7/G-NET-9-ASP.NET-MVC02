@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GymManagement.BLL\GymManagement.BLL.csproj" />
+    <ProjectReference Include="..\GymManagement.DAL\GymManagement.DAL.csproj" />
   </ItemGroup>
 
 </Project>
