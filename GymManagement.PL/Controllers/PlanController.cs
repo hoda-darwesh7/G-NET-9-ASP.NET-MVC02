@@ -1,29 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GymManagement.DAL.Context;
+using GymManagement.DAL.Repositories.Interfaces;
 
 namespace GymManagement.PL.Controllers
 {
     public class PlanController : Controller
     {
-        private readonly GymDbContext  context;
+        private readonly IPlanRepository PlanRepository;
 
-        public PlanController()
-        {
-            context = new GymDbContext();
-        }
 
         // GET ::BaseUrl/Plan/Index
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(CancellationToken ct)
         {
-            var plans = await context.Plans.ToListAsync();
+            var plans = await PlanRepository.GetAllAsync(ct:ct);
             return View(plans);
         }
 
         // GET ::BaseUrl/Plan/Details
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id , CancellationToken ct)
         {
-            var plan = await context.Plans.FindAsync(id);
+            var plan = await PlanRepository.GetByIdAsync(id,ct);
             if (plan == null)
             {
                 return RedirectToAction(nameof(Index));
