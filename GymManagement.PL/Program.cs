@@ -1,3 +1,9 @@
+using GymManagement.DAL.Repositories.Interfaces;
+using GymManagement.DAL.Repositories;
+using GymManagement.DAL.Repositories.Classes;
+using GymManagement.DAL.Context;
+using Microsoft.EntityFrameworkCore;
+
 namespace GymManagement.DAL
 {
     public class Program
@@ -8,6 +14,11 @@ namespace GymManagement.DAL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+            builder.Services.AddDbContext<GymDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             var app = builder.Build();
 
