@@ -1,4 +1,5 @@
-﻿using GymManagement.DAL.Context;
+﻿using GymManagement.DAL;
+using GymManagement.DAL.Context;
 using GymManagement.DAL.Repositories;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
@@ -9,9 +10,9 @@ namespace GymManagement.PL.Controllers
 {
     public class Planontroller : Controller
     {
-        private readonly IPlanRepository _planRepository;
+        private readonly IGenericRepository<Plan> _planRepository;
 
-            public Planontroller(IPlanRepository planRepository)
+            public Planontroller(IGenericRepository<Plan> planRepository)
             {
                 _planRepository = planRepository;
             }
