@@ -9,6 +9,11 @@ namespace GymManagement.DAL
         public decimal Price { get; set; }
         public int DurationDays { get; set; }
         public bool IsActive  { get; set; }
-        
+        #region Relations
+
+        public ICollection<MemberShip> Members { get; set; }
+
+        #endregion
+
     }
 }

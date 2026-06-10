@@ -2,6 +2,8 @@
 using GymManagement.DAL.Configurations;
 using GymManagement.DAL.Models;
 using System.Numerics;
+using GymManagement.DAL.Configrations;
+using System.Reflection;
 
 namespace GymManagement.DAL.Context
 {
@@ -14,8 +16,15 @@ namespace GymManagement.DAL.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration<Plan>(new PlanConfigration());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         public DbSet<Plan> Plans { get; set; }
+        public DbSet<Member> Members { get; set; }
+        public DbSet<Trainer> Trainers { get; set; }
+        public DbSet<Session> Sessions { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<MemberShip> MemberShips { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<HelthRecord> HelthRecords { get; set; }
     }
 }

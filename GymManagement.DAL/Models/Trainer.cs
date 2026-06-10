@@ -10,5 +10,11 @@ namespace GymManagement.DAL.Models
     public class Trainer : GymUser
     {
         public Specialty Specialty { get; set; }
+
+        #region Relations
+
+        public ICollection<Session> Sessions { get; set; } = default!;
+
+        #endregion
     }
 }
