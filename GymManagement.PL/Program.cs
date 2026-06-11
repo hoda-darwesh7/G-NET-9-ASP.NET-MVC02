@@ -3,6 +3,7 @@ using GymManagement.DAL.Repositories;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Context;
 using Microsoft.EntityFrameworkCore;
+using GymManagement.BLL.Services.Interfaces;
 
 namespace GymManagement.DAL
 {
@@ -14,7 +15,7 @@ namespace GymManagement.DAL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+            builder.Services.AddScoped<IMemberService, IMemberService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
             builder.Services.AddDbContext<GymDbContext>(options =>
             {
