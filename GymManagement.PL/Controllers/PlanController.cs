@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManagement.PL.Controllers
 {
-    public class Planontroller : Controller
+    public class PlanController : Controller
     {
         private readonly IGenericRepository<Plan> _planRepository;
 
-            public Planontroller(IGenericRepository<Plan> planRepository)
+            public PlanController(IGenericRepository<Plan> planRepository)
             {
                 _planRepository = planRepository;
             }

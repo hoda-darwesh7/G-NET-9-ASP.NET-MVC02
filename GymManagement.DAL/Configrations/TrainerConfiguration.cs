@@ -11,7 +11,7 @@ namespace GymManagement.DAL.Configrations
 {
     public class TrainerConfiguration : GymUserConfiguration<Trainer> , IEntityTypeConfiguration<Trainer>
     {
-        public new void Confgure(EntityTypeBuilder<Trainer> Builder)
+        public new void Configure(EntityTypeBuilder<Trainer> Builder)
         {
             Builder.Property(x => x.CreatedAt)
                 .HasColumnName("JoinDate")

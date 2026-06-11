@@ -4,17 +4,18 @@ using System.Threading.Tasks;
 
 namespace GymManagement.PL.Controllers
 {
-    public class MemberController : Controller
+    
+    public class MembersController : Controller
     {
         private readonly IMemberService _memberService;
 
-        public MemberController(IMemberService memberService)
+        public MembersController(IMemberService memberService)
         {
             _memberService = memberService;
         }
 
         #region Get Members
-
+        
         public async Task<IActionResult> Index(CancellationToken ct)
         {
             var members = await _memberService.GetAllAsync(ct);
