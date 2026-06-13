@@ -1,11 +1,18 @@
-﻿@using GymManagement.DAL.Models
-@model GymManagement.DAL.Plan
+﻿@using GymManagement.BLL.VeiwModels.PlanViewModel
+@using GymManagement.DAL.Models
+@model PlanViewModel
 
 
 
 @{
     Layout = "_Layout";
 }
+
+
+@{
+    ViewData["Title"] = "Plan-Details";
+}
+
 <body>
     <div class="container">
         <main role="main" class="pb-3">

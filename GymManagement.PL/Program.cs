@@ -10,13 +10,14 @@ namespace GymManagement.DAL
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<IPlanService, PlanService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
             builder.Services.AddDbContext<GymDbContext>(options =>
@@ -25,6 +26,16 @@ namespace GymManagement.DAL
             });
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<GymDbContext>();
+                await context.Database.MigrateAsync();
+
+                
+                await Data.DataSeeder.SeedPlansAsync(context);
+            }
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -45,7 +56,11 @@ namespace GymManagement.DAL
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+           
+
             app.Run();
+
+
         }
     }
 }

@@ -1,9 +1,14 @@
-﻿@using GymManagement.DAL.Models
-@model IEnumerable<GymManagement.DAL.Plan>
+﻿@using GymManagement.BLL.VeiwModels.PlanViewModel
+@using GymManagement.DAL.Models
+@model IEnumerable<PlanViewModel>
 
 
 @{
     Layout = "_Layout";
+}
+
+@{
+    ViewData["Title"] = "Plans-Index";
 }
 
 
