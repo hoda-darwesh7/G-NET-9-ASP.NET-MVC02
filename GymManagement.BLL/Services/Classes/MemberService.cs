@@ -18,16 +18,19 @@ namespace GymManagement.BLL.Services.Classes
         private readonly IGenericRepository<MemberShip> _memberShipRepo;
         private readonly IGenericRepository<Plan> _planRepo;
         private readonly IGenericRepository<HelthRecord> _healthRepo;
+        private readonly IGenericRepository<Booking> _bookingRepo;
 
         public MemberService(IGenericRepository<Member> memberRepo ,
                              IGenericRepository<MemberShip> membershipRepo , 
                              IGenericRepository<Plan> planRepo , 
-                             IGenericRepository<HelthRecord> HealthRepo)
+                             IGenericRepository<HelthRecord> HealthRepo , 
+                             IGenericRepository<Booking> BookingRepo)
         {
             _memberRepo = memberRepo;
             _memberShipRepo = membershipRepo;
             _planRepo = planRepo;
             _healthRepo = HealthRepo;
+            _bookingRepo = BookingRepo;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default)
@@ -62,6 +65,18 @@ namespace GymManagement.BLL.Services.Classes
 
             return Result > 0;
 
+        }
+
+        public async Task<bool> DeleteMemberAsync(int Id, CancellationToken ct = default)
+        {
+            var member = await _memberRepo.GetByIdAsync(Id,ct);
+            if (member == null) return false;
+
+            var ActiveBooking = await _bookingRepo.AnyAsync(B => B.MemberId == Id && B.Session.StartDate > DateTime.Now);
+            if(ActiveBooking) return false;
+
+            var Result = await _memberRepo.DeleteAsync(member);
+            return Result > 0;
         }
 
         public async Task<IEnumerable<MemberViewModel>> GetAllAsync(CancellationToken ct = default)

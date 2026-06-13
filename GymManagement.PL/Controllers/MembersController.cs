@@ -73,7 +73,7 @@ namespace GymManagement.PL.Controllers
         #region Edite
 
         [HttpGet]
-        public async Task<IActionResult> EditMember(int id, CancellationToken ct)
+        public async Task<IActionResult> EditMember([FromRoute] int id, CancellationToken ct)
         {
             var member = await _memberService.GetMemberToUpdateasync(id, ct);
             if (member == null)
@@ -101,7 +101,29 @@ namespace GymManagement.PL.Controllers
 
         #region Delete
 
+        public async Task<IActionResult> Delete([FromRoute] int id , CancellationToken ct)
+        {
+            var member = await _memberService.GetMemberDetailsAsync(id, ct);
 
+            if (member is null)
+            {
+                TempData["ErrorMessage"] = "Member Not Found !";
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] int id , CancellationToken ct)
+        {
+            var Result = await _memberService.DeleteMemberAsync(id, ct);
+            if(Result)
+                TempData["SuccessMessage"] = "Member Deleted Successfully";
+            else
+                TempData["ErrorMessage"] = "Failed To Delete Member !";
+
+            return RedirectToAction(nameof(Index));
+
+        }
 
         #endregion
 
