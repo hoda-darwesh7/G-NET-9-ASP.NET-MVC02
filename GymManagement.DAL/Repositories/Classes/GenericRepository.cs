@@ -21,10 +21,9 @@ namespace GymManagement.DAL.Repositories.Classes
             _dbContext = dbContext;
             _Set = dbContext.Set<TEntity>();
         }
-        public async Task<int> AddAsync(TEntity entity)
+        public async void AddAsync(TEntity entity)
         {
             _Set.Add(entity);
-            return await _dbContext.SaveChangesAsync();
         }
 
         public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default)
@@ -32,10 +31,10 @@ namespace GymManagement.DAL.Repositories.Classes
             return _Set.AsNoTracking().AnyAsync(predicate, ct);
         }
 
-        public async Task<int> DeleteAsync(TEntity entity)
+        public async void DeleteAsync(TEntity entity)
         {
             _Set.Remove(entity);
-            return await _dbContext.SaveChangesAsync();
+            
         }
 
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = false, CancellationToken ct = default)
@@ -53,10 +52,10 @@ namespace GymManagement.DAL.Repositories.Classes
         public async Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default)
             =>await _Set.FindAsync(id, ct);
 
-        public async Task<int> UpdateAsync(TEntity entity)
+        public async void UpdateAsync(TEntity entity)
         {
             _Set.Update(entity);
-            return await _dbContext.SaveChangesAsync();
+            
         }
     }
 }
