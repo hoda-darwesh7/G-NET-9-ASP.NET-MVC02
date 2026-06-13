@@ -1,5 +1,6 @@
 ﻿using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.VeiwModels.MemberViewModel;
+using GymManagement.DAL;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Models.Enums;
 using GymManagement.DAL.Repositories.Interfaces;
@@ -14,10 +15,19 @@ namespace GymManagement.BLL.Services.Classes
     public class MemberService : IMemberService
     {
         private readonly IGenericRepository<Member> _memberRepo;
+        private readonly IGenericRepository<MemberShip> _memberShipRepo;
+        private readonly IGenericRepository<Plan> _planRepo;
+        private readonly IGenericRepository<HelthRecord> _healthRepo;
 
-        public MemberService(IGenericRepository<Member> memberrepo)
+        public MemberService(IGenericRepository<Member> memberRepo ,
+                             IGenericRepository<MemberShip> membershipRepo , 
+                             IGenericRepository<Plan> planRepo , 
+                             IGenericRepository<HelthRecord> HealthRepo)
         {
-            _memberRepo = memberrepo;
+            _memberRepo = memberRepo;
+            _memberShipRepo = membershipRepo;
+            _planRepo = planRepo;
+            _healthRepo = HealthRepo;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default)
@@ -77,6 +87,52 @@ namespace GymManagement.BLL.Services.Classes
                 result.Add(memberViewModel);
             }
             return result;
+        }
+
+        public async Task<HealthRecordViewModel> GetHealthRecordDetailsAsync(int HealthId, CancellationToken ct = default)
+        {
+            var HelthRecord = await _healthRepo.FirstOrDefaultAsync(X => X.Id == HealthId ,ct:ct);
+
+            if (HelthRecord is null) return null;
+            else
+                return new HealthRecordViewModel()
+                {
+                    Weight = HelthRecord.Weight,
+                    Height = HelthRecord.Height,
+                    BloodType = HelthRecord.BloodType,
+                    Note = HelthRecord.Note,
+                };
+
+        }
+
+        public async Task<MemberViewModel?> GetMemberDetailsAsync(int memberId, CancellationToken ct = default)
+        {
+            var member = await _memberRepo.GetByIdAsync(memberId , ct);
+            if (member == null) return null;
+
+            var Model = new MemberViewModel()
+            {
+                Name = member.Name,
+                Phone = member.Phone,
+                Photo = member.Photo,
+                Email = member.Email,
+                Gender = member.Gender.ToString(),
+                DateOfBirth = member.DateOfBirth.ToString(),
+                Address = $"{member.Address.BuildingNumber} - {member.Address.Street} - {member.Address.City}"
+            };
+
+            var activeMemberShip = await _memberShipRepo.FirstOrDefaultAsync(X => X.Id == memberId && X.EndDate > DateTime.Now); 
+            
+            if (activeMemberShip is not null)
+            {
+                var activePlan = await _planRepo.GetByIdAsync(activeMemberShip.PlanId , ct);
+
+                Model.PlanName = activePlan.Name; 
+                Model.MembershipStartDate = activeMemberShip.CreatedAt.ToString();
+                Model.MembershipEndDate = activeMemberShip.EndDate.ToString();
+                
+            }
+            return Model;
         }
     }
 }

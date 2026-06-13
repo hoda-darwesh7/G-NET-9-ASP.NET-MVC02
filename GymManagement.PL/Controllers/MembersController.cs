@@ -1,5 +1,6 @@
 ﻿using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.VeiwModels.MemberViewModel;
+using GymManagement.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -23,6 +24,26 @@ namespace GymManagement.PL.Controllers
             return View(members);
         }
 
+        public async Task<IActionResult> MemberDetails(int id , CancellationToken ct)
+        {
+            var member = await _memberService.GetMemberDetailsAsync(id , ct);
+            if (member == null)
+            {
+                TempData["ErrorMessage"] = "Member Not Found !";
+            }
+            return View(member);
+        }
+
+        public async Task<IActionResult> HealthRecordDetails(int id , CancellationToken ct)
+        {
+            var memberrecord = await _memberService.GetHealthRecordDetailsAsync(id, ct);
+            if (memberrecord == null)
+            {
+                TempData["ErrorMessage"] = "Member Health Record Not Found !";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(memberrecord);
+        }
         #endregion
 
         #region Create
