@@ -1,4 +1,5 @@
 ﻿
+
 namespace GymManagementBLL.ViewModels.TrainerViewModels
 {
     public class TrainerViewModel
