@@ -9,15 +9,18 @@ using System.Threading.Tasks;
 
 namespace GymManagement.DAL.Configrations
 {
-    public class TrainerConfiguration : GymUserConfiguration<Trainer> , IEntityTypeConfiguration<Trainer>
+    public class BookingConfiguration : IEntityTypeConfiguration<Booking>
     {
-        public new void Configure(EntityTypeBuilder<Trainer> Builder)
+        public void Configure(EntityTypeBuilder<Booking> builder)
         {
-            Builder.Property(x => x.CreatedAt)
-                .HasColumnName("JoinDate")
+            builder.Ignore(i => i.Id);
+
+            builder.Property(c => c.CreatedAt)
+                .HasColumnName("BookingDate")
                 .HasDefaultValueSql("GETDATE()");
 
-            base.Configure(Builder);
+            builder.HasKey(x => new {x.SessionId , x.MemberId });
+
         }
     }
 }
