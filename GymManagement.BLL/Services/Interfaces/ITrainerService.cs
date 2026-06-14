@@ -11,6 +11,7 @@ namespace GymManagement.BLL.Services.Interfaces
     public interface ITrainerService
     {
         Task<IEnumerable<TrainerViewModel>> GetAllTrainersAsync(CancellationToken ct = default);
+        Task<bool> CreateTrainerAsync(CreateTrainerViewModel model, CancellationToken ct = default);
 
     }
 }
