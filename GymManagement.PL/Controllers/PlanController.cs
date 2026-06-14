@@ -1,9 +1,11 @@
-﻿using GymManagement.BLL.Services.Interfaces;
+﻿using GymManagement.BLL.Services.Classes;
+using GymManagement.BLL.Services.Interfaces;
 using GymManagement.DAL;
 using GymManagement.DAL.Context;
 using GymManagement.DAL.Repositories;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
+using GymManagementBLL.ViewModels.PlanViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,7 @@ namespace GymManagement.PL.Controllers
             _planService = planService;
         }
 
+        #region Get Plans 
         // GET ::BaseUrl/Plan/Index
         public async Task<IActionResult> Index(CancellationToken ct)
         {
@@ -35,6 +38,36 @@ namespace GymManagement.PL.Controllers
             }
             return View(plan);
         }
+        #endregion
 
+        #region Update 
+
+        [HttpGet]
+        public async Task<IActionResult> Edit([FromRoute] int PlanId , CancellationToken ct)
+        {
+            var Plan = await _planService.GetPlanToUpdateAsync(PlanId, ct);
+            if (Plan == null)
+            {
+                TempData["ErrorMessage"] = "Plan Not Found !";
+                //return RedirectToAction(nameof(Index));
+            }
+            return View(Plan);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id , UpdatePlanViewModel model ,  CancellationToken ct)
+        {
+            if(!ModelState.IsValid) return View(model);
+
+            var result = await _planService.UpdatePlanAsync(id, model, ct);
+            if (result)
+                TempData["SuccessMessage"] = "Plan Updated Successfully";
+            else
+                TempData["ErrorMessage"] = "Failed To Update Plan !";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion
     }
 }
