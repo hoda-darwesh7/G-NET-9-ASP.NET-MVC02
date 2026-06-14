@@ -1,9 +1,14 @@
-﻿@using GymManagement.DAL.Models
-@model IEnumerable<GymManagement.DAL.Plan>
+﻿@using GymManagement.BLL.VeiwModels.PlanViewModel
+@using GymManagement.DAL.Models
+@model IEnumerable<PlanViewModel>
 
 
 @{
     Layout = "_Layout";
+}
+
+@{
+    ViewData["Title"] = "Plans-Index";
 }
 
 
@@ -57,7 +62,7 @@
                                                 </a>
 
                                                 <div class="d-flex gap-2">
-                                                    <a href="\Plans\Edit\@plan.Id" class="btn btn-outline btn-sm flex-fill"> <!--Edit-->
+                                                    <a asp-controller="Plan" asp-action="Edit" asp-route-id="@plan.Id" " class="btn btn-outline btn-sm flex-fill"> <!--Edit-->
                                                         <i class="bi bi-pencil me-1"></i>Edit
                                                     </a>
                                                     <form href="\Plans\Activate\@plan.Id" method="post" class="flex-fill"> <!--Edit-->

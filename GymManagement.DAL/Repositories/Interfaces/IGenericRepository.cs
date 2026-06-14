@@ -15,12 +15,14 @@ namespace GymManagement.DAL.Repositories.Interfaces
         //GetPlanById
         Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default);
         //Add
-        Task<int> AddAsync(TEntity entity);
+        void AddAsync(TEntity entity);
         //Update
-        Task<int> UpdateAsync(TEntity entity);
+        void UpdateAsync(TEntity entity);
         //Delete
-        Task<int> DeleteAsync(TEntity entity);
+        void DeleteAsync(TEntity entity);
 
         Task<bool> AnyAsync(Expression<Func< TEntity , bool>> predicate , CancellationToken ct = default);
+
+        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity , bool>> predicate , bool tracking = false , CancellationToken ct = default);
     }
 }
