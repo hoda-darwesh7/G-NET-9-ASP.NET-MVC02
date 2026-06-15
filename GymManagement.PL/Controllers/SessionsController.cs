@@ -38,14 +38,14 @@ namespace GymManagement.PL.Controllers
             }
 
             var result = await _sessionService.CreateSessionAsync(model, ct);
-            if(result)
+            if(result.success)
             {
                 TempData["SuccessMessage"] = "Session Created Successfully";
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                TempData["ErrorMessage"] = "FailEd To Create Session !";
+                TempData["ErrorMessage"] =result.error;
 
             }
             await DropDownList();
