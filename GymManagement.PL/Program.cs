@@ -5,6 +5,7 @@ using GymManagement.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.Services.Classes;
+using GymManagement.BLL.Profiles;
 
 namespace GymManagement.DAL
 {
@@ -22,6 +23,7 @@ namespace GymManagement.DAL
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(X => X.AddProfile(new MappingProfile()));
             builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
             builder.Services.AddDbContext<GymDbContext>(options =>
             {
