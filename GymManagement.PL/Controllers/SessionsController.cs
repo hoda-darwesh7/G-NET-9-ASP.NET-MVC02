@@ -13,11 +13,31 @@ namespace GymManagement.PL.Controllers
         {
             _sessionService = sessionService;
         }
+
+
+        #region Get
+
         public async Task<IActionResult> Index(CancellationToken ct)
         {
             var Sessions = await _sessionService.GetAllSessionsAsync(ct);
             return View(Sessions);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id , CancellationToken ct)
+        {
+            var Sessions = await _sessionService.GetSessionByIdAsync(id , ct);
+            if (Sessions.success)
+                return View(Sessions.value);
+            else
+            {
+                TempData["ErrorMessage"] = Sessions.error;
+                return RedirectToAction("Index");
+            }
+        }
+
+        #endregion
+
 
         #region Create
 
