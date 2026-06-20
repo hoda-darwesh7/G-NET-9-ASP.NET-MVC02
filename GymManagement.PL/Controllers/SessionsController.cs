@@ -2,6 +2,7 @@
 using GymManagement.BLL.VeiwModels.SessionViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 
 namespace GymManagement.PL.Controllers
 {
@@ -76,6 +77,55 @@ namespace GymManagement.PL.Controllers
         {
             ViewBag.Trainers = new SelectList(await _sessionService.GetTrainerForDropDown(), "Id", "Name");
             ViewBag.Categories = new SelectList(await _sessionService.GetCategoryForDropDown(), "Id", "CategoryName");
+        }
+
+        #endregion
+
+
+        #region Update 
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id, CancellationToken ct)
+        {
+            var result = await _sessionService.GetSessionToUpdateAsync(id, ct);
+            if (result.success)
+            {
+                await GetTrainerlist();
+                return View(result.value);
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.error;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, UpdateSessionViewModel model , CancellationToken ct)
+        {
+            if (!ModelState.IsValid)
+            {
+                await GetTrainerlist();
+                return View(model);
+            }
+
+            var RResult = await _sessionService.UpdateSessionAsync(id, model, ct);
+            if(RResult.success)
+            {
+                TempData["SuccessMessage"] = "Session Updated Successfuly";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = RResult.error;
+                await GetTrainerlist();
+                return View(model);
+            }
+        }
+
+        private async Task GetTrainerlist()
+        {
+            ViewBag.Trainers = new SelectList(await _sessionService.GetTrainerForDropDown() , "Id" ,"Name");
         }
 
         #endregion
