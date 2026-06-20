@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.Services.Classes;
 using GymManagement.BLL.Profiles;
+using GymManagement.PL;
 
 namespace GymManagement.DAL
 {
@@ -32,14 +33,10 @@ namespace GymManagement.DAL
 
             var app = builder.Build();
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<GymDbContext>();
-                await context.Database.MigrateAsync();
+            // SEEDING
+            await app.MigrateAndSeedDataAsync();
 
-                
-                await Data.DataSeeder.SeedPlansAsync(context);
-            }
+            
 
 
             // Configure the HTTP request pipeline.
