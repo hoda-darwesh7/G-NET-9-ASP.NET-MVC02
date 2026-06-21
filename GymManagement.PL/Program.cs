@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.Services.Classes;
 using GymManagement.BLL.Profiles;
+using GymManagement.PL;
 
 namespace GymManagement.DAL
 {
@@ -25,6 +26,7 @@ namespace GymManagement.DAL
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(X => X.AddProfile(new MappingProfile()));
             builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
+            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
             builder.Services.AddDbContext<GymDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -32,14 +34,10 @@ namespace GymManagement.DAL
 
             var app = builder.Build();
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<GymDbContext>();
-                await context.Database.MigrateAsync();
+            // SEEDING
+            await app.MigrateAndSeedDataAsync();
 
-                
-                await Data.DataSeeder.SeedPlansAsync(context);
-            }
+            
 
 
             // Configure the HTTP request pipeline.

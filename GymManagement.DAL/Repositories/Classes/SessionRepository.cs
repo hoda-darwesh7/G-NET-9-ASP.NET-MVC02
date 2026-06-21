@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GymManagement.DAL.Repositories.Classes
 {
-    public class SessionRepository : GenericRepository<Session>, ISessionRepository 
+    public class SessionRepository : GenericRepository<Session>, ISessionRepository
     {
         private readonly GymDbContext _dbContext;
 
@@ -29,6 +29,11 @@ namespace GymManagement.DAL.Repositories.Classes
         {
             var query = _dbContext.Sessions.AsNoTracking().Include(t => t.Trainer).Include(c => c.Category);
             return await query.ToListAsync();
+        }
+
+        public async Task<Session?> GetSessionsWithTrainerAndCategory(int id, CancellationToken ct = default)
+        {
+            return await _dbContext.Sessions.AsNoTracking().Include(T => T.Trainer).Include(c => c.Category).FirstOrDefaultAsync(S => S.Id == id);
         }
     }
 }

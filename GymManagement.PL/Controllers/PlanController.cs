@@ -43,10 +43,10 @@ namespace GymManagement.PL.Controllers
         #region Update 
 
         [HttpGet]
-        public async Task<IActionResult> Edit([FromRoute] int PlanId , CancellationToken ct)
+        public async Task<IActionResult> Edit(int PlanId , CancellationToken ct)
         {
             var Plan = await _planService.GetPlanToUpdateAsync(PlanId, ct);
-            if (Plan == null)
+            if (Plan is null)
             {
                 TempData["ErrorMessage"] = "Plan Not Found !";
                 //return RedirectToAction(nameof(Index));
@@ -69,5 +69,16 @@ namespace GymManagement.PL.Controllers
         }
 
         #endregion
+
+        [HttpPost]
+        public async Task<IActionResult> Activate(int id , CancellationToken ct)
+        {
+            var result = await _planService.ToggleActivationAsync(id,ct);
+            if (result)
+                TempData["SuccessMessage"] = "Plan Status Changed";
+            else
+                TempData["ErrorMessage"] = "Failed to Toggel Plan Status";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
