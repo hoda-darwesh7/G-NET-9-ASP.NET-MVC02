@@ -18,4 +18,8 @@
     <ProjectReference Include="..\GymManagement.DAL\GymManagement.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MembersPhoto\" />
+  </ItemGroup>
+
 </Project>

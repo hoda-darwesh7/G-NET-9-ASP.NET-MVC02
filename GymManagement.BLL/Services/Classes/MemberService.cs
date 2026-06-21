@@ -17,11 +17,13 @@ namespace GymManagement.BLL.Services.Classes
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IAttachmentService _attachmentService;
 
-        public MemberService(IUnitOfWork unitOfWork , IMapper mapper)
+        public MemberService(IUnitOfWork unitOfWork , IMapper mapper , IAttachmentService attachmentService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _attachmentService = attachmentService;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default)
@@ -30,12 +32,21 @@ namespace GymManagement.BLL.Services.Classes
             var phone = await _unitOfWork.GetRepository<Member>().AnyAsync(x => x.Phone == model.Phone);
             if (email || phone) return false;
 
+            var StoredPhotoName = await _attachmentService.UploadAsync(model.PhotoFile.OpenReadStream() ,model.PhotoFile.FileName ,"MembersPhoto");
+            if (string.IsNullOrWhiteSpace(StoredPhotoName)) return false;
+
             var member = _mapper.Map<Member>(model);
+            member.Photo = StoredPhotoName;
 
             _unitOfWork.GetRepository<Member>().AddAsync(member);
             var Result = await _unitOfWork.SaveChangesAsync(ct);
-            return Result > 0;
+            if (Result > 0)
+                return true;
+            else
+            {
 
+                return false;
+            }
         }
 
         public async Task<bool> DeleteMemberAsync(int Id, CancellationToken ct = default)
