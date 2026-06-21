@@ -10,10 +10,12 @@ namespace GymManagement.PL.Controllers
     public class MembersController : Controller
     {
         private readonly IMemberService _memberService;
+        private readonly IAttachmentService _attachmentService;
 
-        public MembersController(IMemberService memberService)
+        public MembersController(IMemberService memberService , IAttachmentService attachmentService)
         {
             _memberService = memberService;
+            _attachmentService = attachmentService;
         }
 
         #region Get Members
@@ -44,6 +46,20 @@ namespace GymManagement.PL.Controllers
             }
             return View(memberrecord);
         }
+
+        // Get Member Photo
+        [HttpGet]
+        public async Task<IActionResult> Picture(int id)
+        {
+            var member = await _memberService.GetMemberDetailsAsync(id);
+            if (member is null || string.IsNullOrWhiteSpace(member.Photo))
+                return NotFound();
+            var result = _attachmentService.GetFile(member.Photo, "MembersPhoto");
+            if(result == null) return NotFound();
+            return File(result.Value.stream , result.Value.contentType);
+        }
+
+
         #endregion
 
         #region Create

@@ -22,6 +22,43 @@ namespace GymManagement.BLL.Services.Classes
             _env = environment;
         }
 
+        public bool Delete(string fileName, string folderName )
+        {
+            var fullPath = Path.Combine(_env.ContentRootPath, folderName , fileName);
+
+            try
+            {
+                if (!File.Exists(fullPath)) return false;
+                File.Delete(fullPath);
+                return true;
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex , "Faile to Delete File!");
+                return false;
+            }
+        }
+
+        public (Stream stream, string contentType)? GetFile(string fileName, string folderName)
+        {
+            if(string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(folderName)) return null;
+
+            var fullPath = Path.Combine(_env.ContentRootPath,folderName, fileName);
+            if(!File.Exists(fullPath)) return null;
+
+            var stream = new FileStream(fullPath , FileMode.Open, FileAccess.Read);
+            var Ex = Path.GetExtension(fileName).ToLower();
+
+            var ContentType = Ex switch
+            {
+                ".png" => "image/png",
+                ".jpg" or ".jpeg" => "image/jpeg",
+                _ => "application/octet-stream"
+            };
+
+            return (stream,ContentType);
+        }
+
         public async Task<string?> UploadAsync(Stream fileStream, string fileName, string folderName, CancellationToken ct = default)
         {
             if (fileStream is null || !fileStream.CanRead) return null;
