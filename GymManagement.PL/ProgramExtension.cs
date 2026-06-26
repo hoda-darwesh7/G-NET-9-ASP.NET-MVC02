@@ -1,5 +1,7 @@
 ﻿using GymManagement.DAL;
 using GymManagement.DAL.Context;
+using GymManagement.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -13,6 +15,8 @@ namespace GymManagement.PL
 
             var dbContext = scope.ServiceProvider.GetRequiredService<GymDbContext>();
             var Logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var Migrations = await dbContext.Database.GetPendingMigrationsAsync();
             if (Migrations.Any())
             {
@@ -21,6 +25,7 @@ namespace GymManagement.PL
 
             var seedFolderPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "Files");
             await GymDataSeeding.SeedAsync(dbContext, seedFolderPath, Logger);
+            await IdentityDataSeeding.SeedIdentityData(roleManager , userManager , Logger);
         }
     }
 }
