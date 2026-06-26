@@ -1,12 +1,13 @@
 ﻿using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.VeiwModels.MemberViewModel;
 using GymManagement.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace GymManagement.PL.Controllers
 {
-
+    [Authorize(Roles = "Admin")]
     public class MembersController : Controller
     {
         private readonly IMemberService _memberService;

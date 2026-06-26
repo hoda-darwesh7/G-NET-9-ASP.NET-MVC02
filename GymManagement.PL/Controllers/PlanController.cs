@@ -6,11 +6,13 @@ using GymManagement.DAL.Repositories;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymManagementBLL.ViewModels.PlanViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymManagement.PL.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PlanController : Controller
     {
         private readonly IPlanService _planService;

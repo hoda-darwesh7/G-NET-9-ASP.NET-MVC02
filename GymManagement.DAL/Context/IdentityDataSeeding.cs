@@ -23,14 +23,14 @@ namespace GymManagement.DAL.Context
                 bool HasRoles = await roleManager.Roles.AnyAsync(ct);
                 if (HasUsers && HasRoles) return;
                 var roles = new List<IdentityRole>()
-            {
+                {
                 new IdentityRole("SuperAdmin"),
                 new IdentityRole("Admin")
-            };
+                };
 
                 foreach (var role in roles)
                 {
-                    if (await roleManager.RoleExistsAsync(role.Name))
+                    if (!await roleManager.RoleExistsAsync(role.Name))
                     {
                         var roleResult = await roleManager.CreateAsync(role);
                         if (!roleResult.Succeeded)
@@ -48,12 +48,12 @@ namespace GymManagement.DAL.Context
                         FirstName = "Mahmoud",
                         LastName = "Darwesh",
                         Email = "darwesh@gmail.com",
-                        UserName = "Mahmoud Darwesh",
+                        UserName = "MahmoudDarwesh",
                         PhoneNumber = "01128025717"
 
                     };
 
-                    await userManager.CreateAsync(mainAdmin, "P@ssw0rd");
+                    await userManager.CreateAsync(mainAdmin, "P@ssw0rd123");
                     await userManager.AddToRoleAsync(mainAdmin, "SuperAdmin");
 
                     var Admin = new ApplicationUser()
@@ -61,12 +61,12 @@ namespace GymManagement.DAL.Context
                         FirstName = "Aya",
                         LastName = "Darwesh",
                         Email = "aya@gmail.com",
-                        UserName = "Aya Darwesh",
+                        UserName = "AyaDarwesh",
                         PhoneNumber = "01128025718"
 
                     };
 
-                    await userManager.CreateAsync(Admin, "P@SSw0rd");
+                    await userManager.CreateAsync(Admin, "P@ssw0rd123");
                     await userManager.AddToRoleAsync(Admin, "Admin");
 
                     Logger.LogInformation("Identity Seeded Successfully");
