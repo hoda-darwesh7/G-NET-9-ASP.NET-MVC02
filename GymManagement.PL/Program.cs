@@ -37,8 +37,12 @@ namespace GymManagement.DAL
                 config.User.RequireUniqueEmail = true;
                 config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
                 config.Lockout.MaxFailedAccessAttempts = 5;
-            }).AddEntityFrameworkStores<GymDbContext>(); 
+            }).AddEntityFrameworkStores<GymDbContext>();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+
+            });
 
             builder.Services.AddDbContext<GymDbContext>(options =>
             {
