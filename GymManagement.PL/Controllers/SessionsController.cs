@@ -1,11 +1,15 @@
 ﻿using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.VeiwModels.SessionViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 
 namespace GymManagement.PL.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class SessionsController : Controller
     {
         private readonly ISessionService _sessionService;
@@ -126,6 +130,43 @@ namespace GymManagement.PL.Controllers
         private async Task GetTrainerlist()
         {
             ViewBag.Trainers = new SelectList(await _sessionService.GetTrainerForDropDown() , "Id" ,"Name");
+        }
+
+        #endregion
+
+        #region Delete
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id , CancellationToken ct)
+        {
+            var result = await _sessionService.GetSessionByIdAsync(id);
+            if (result.success)
+            {
+                return View(result.value);
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.error;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct)
+        {
+            var result = await _sessionService.DeleteSessionAsync(id, ct);
+            if (result.success)
+            {
+                TempData["SuccessMessage"] = "Session Deleted Successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.error;
+                return RedirectToAction(nameof(Index));
+            }
+             
         }
 
         #endregion

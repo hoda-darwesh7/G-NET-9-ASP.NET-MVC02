@@ -4,18 +4,21 @@ using GymManagement.DAL.Models;
 using System.Numerics;
 using GymManagement.DAL.Configrations;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace GymManagement.DAL.Context
 {
-    public class GymDbContext:DbContext
+    public class GymDbContext : IdentityDbContext<ApplicationUser>
     {
-        public GymDbContext(DbContextOptions<GymDbContext> options ) : base( options ) 
+        public GymDbContext(DbContextOptions<GymDbContext> options) : base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         public DbSet<Plan> Plans { get; set; }
