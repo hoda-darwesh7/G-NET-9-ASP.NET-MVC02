@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using GymManagement.BLL.VeiwModels.MembershipsViewModels;
 using GymManagement.BLL.VeiwModels.MemberViewModel;
 using GymManagement.BLL.VeiwModels.SessionViewModels;
+using GymManagement.DAL;
 using GymManagement.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ namespace GymManagement.BLL.Profiles
         {
             MemperProfiles();
             SessionProfiles();
+            MembershipProfiles();
         }
 
         private void MemperProfiles()
@@ -49,6 +52,7 @@ namespace GymManagement.BLL.Profiles
                     Street = src.Street,
                 }))
                 .ForMember(dest => dest.HelthRecord, opt => opt.MapFrom(src => src.HealthRecordViewModel));
+            CreateMap<Member, MemberSelectListViewModel>();
         }
 
         private void SessionProfiles()
@@ -61,6 +65,18 @@ namespace GymManagement.BLL.Profiles
                 .ForMember(dest => dest.CategoryName , opt => opt.MapFrom(src => src.Category.CategoryName));
             CreateMap<Session, UpdateSessionViewModel>().ReverseMap();
             //CreateMap<UpdateSessionViewModel, Session>();
+        }
+
+        private void MembershipProfiles()
+        {
+            CreateMap<MemberShip, MembershipsViewModel>()
+                .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member.Name))
+                .ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Plan.Name))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.CreatedAt));
+            CreateMap<CreateMembershipViewModel, MemberShip>();
+            CreateMap<Member , MemberSelectListViewModel>();
+            CreateMap<Plan , PlanSelectViewModel>();
+
         }
     }
 }
